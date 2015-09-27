@@ -5,7 +5,7 @@ if node[:opsworks][:instance][:layers].include?('rails-app')
     current_path = deploy[:current_path]
     
     # create private key
-    remote_file "#{current_path}/public/client.p12" do
+    cookbook_file "#{current_path}/public/client.p12" do
       source "client.p12"      
       mode 0655
     end
