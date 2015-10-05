@@ -9,10 +9,6 @@ node[:deploy].each do |application, deploy|
   deploy = node[:deploy][application]
   current_path = deploy[:current_path]
 
-  # Uncomment the flavor of sphinx you want to use
-  flavor = "thinking_sphinx"
-  #flavor = "ultrasphinx"
-  
   is_sphinx_instance = node[:opsworks][:instance][:layers].include?('sphinx')
   is_rails_app = node[:opsworks][:instance][:layers].include?('rails-app')
 
@@ -29,7 +25,7 @@ node[:deploy].each do |application, deploy|
   sphinx_host = node[:opsworks][:layers]['sphinx'][:instances].collect{|instance, names| names["private_ip"]}.first rescue nil
   
   if is_sphinx_instance
-    Chef::Log.info("configuring #{flavor}")
+    Chef::Log.info("configuring thinking_sphinx")
     
     directory "/data/sphinx/#{application}/indexes" do
       recursive true
@@ -52,8 +48,7 @@ node[:deploy].each do |application, deploy|
       mode 0644
       variables({
         :application => application,
-        :user => deploy[:user],
-        :flavor => flavor
+        :user => deploy[:user]
       })
     end
 
@@ -67,7 +62,7 @@ node[:deploy].each do |application, deploy|
         day     '*'
         month   '*'
         weekday '*'
-        command "cd /data/#{application}/current && RAILS_ENV=#{deploy[:rails_env]} bundle exec rake #{flavor}:index"
+        command "cd /data/#{application}/current && RAILS_ENV=#{deploy[:rails_env]} bundle exec rake ts:index"
         user deploy[:user]
       end
     end
@@ -97,7 +92,7 @@ node[:deploy].each do |application, deploy|
     end
 
     execute "sphinx config" do
-      command "bundle exec rake #{flavor}:configure"
+      command "bundle exec rake ts:configure"
       user deploy[:user]
       environment({          
         'RAILS_ENV' => deploy[:rails_env]
@@ -105,12 +100,12 @@ node[:deploy].each do |application, deploy|
       cwd current_path
     end
 
-    Chef::Log.info("indexing #{flavor}")
+    Chef::Log.info("indexing thinking_sphinx")
 
     # Check to see if a migration was run during the last deployment. If so, we should validate that the sphinx reindex is working
     if deploy["migrate"]
-      execute "#{flavor} index" do
-        command "bundle exec rake #{flavor}:index"
+      execute "thinking_sphinx index" do
+        command "bundle exec rake ts:index"
         user deploy[:user]
         environment({            
           'RAILS_ENV' => deploy[:rails_env]
