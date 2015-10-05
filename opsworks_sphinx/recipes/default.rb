@@ -25,7 +25,7 @@ node[:deploy].each do |application, deploy|
 
   cron_interval = 10 #If this is not set your data will NOT be indexed
 
-  
+  #sphinx_host = node["opsworks"]["layers"]["sphinx"]["instances"][0]["private_dns_name"]
   sphinx_host = 'ec2-54-183-72-150.us-west-1.compute.amazonaws.com'
   
   if is_sphinx_instance
@@ -50,16 +50,7 @@ node[:deploy].each do |application, deploy|
       group deploy[:group]
       mode 0755
     end
-
-    remote_file "/etc/logrotate.d/sphinx" do
-      owner "root"
-      group "root"
-      mode 0755
-      source "sphinx.logrotate"
-      backup false
-      action :create
-    end
-
+    
     template "/etc/monit/monitrc.d/sphinx.#{application}" do
       source "sphinx.erb"
       owner deploy[:user]
