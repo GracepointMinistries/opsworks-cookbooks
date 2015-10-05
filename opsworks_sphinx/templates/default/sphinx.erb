@@ -1,0 +1,5 @@
+check process sphinx_<%= @application %>_9312
+  with pidfile /var/run/sphinxsearch/searchd.pid
+  start program = "/usr/bin/searchd <%= @application %> start <%= @env %>" as uid <%= @user %> and gid <%= @user %> with timeout 90 seconds
+  stop program = "/usr/bin/searchd <%= @application %> stop <%= @env %>" as uid <%= @user %> and gid <%= @user %> with timeout 90 seconds
+  group sphinx_<%= @application %>
