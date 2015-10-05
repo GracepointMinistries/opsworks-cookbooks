@@ -76,11 +76,11 @@ node[:deploy].each do |application, deploy|
       mode 0755
     end
 
-    template "#{deploy[:deploy_to]}/shared/config/sphinx.yml" do
+    template "#{deploy[:deploy_to]}/shared/config/thinking_sphinx.yml" do
       owner deploy[:user]
       group deploy[:group]
       mode 0644
-      source "sphinx.yml.erb"
+      source "thinking_sphinx.yml.erb"
       variables({
         :application => application,
         :release_path => current_path,
