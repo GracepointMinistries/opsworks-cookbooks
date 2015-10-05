@@ -106,7 +106,7 @@ node[:deploy].each do |application, deploy|
         variables({
           :application => application,
           :release_path => current_path,
-          :environment => deploy[:rails_env]
+          :environment => deploy[:rails_env],
           :address => sphinx_host,
           :user => deploy[:user],
           :mem_limit => '512M'
