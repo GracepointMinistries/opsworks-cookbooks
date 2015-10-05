@@ -1,2 +1,2 @@
 # Update whenever jobs.
-run "cd <%= @release_path %>; bundle exec whenever --set environment=<%= @environment %> --update-crontab gracewiki"
+run "cd <%= @release_path %>; bundle exec whenever --set environment=<%= @environment %> --update-crontab <%= @application %>"

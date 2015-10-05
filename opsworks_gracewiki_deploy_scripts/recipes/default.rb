@@ -12,7 +12,11 @@ node[:deploy].each do |application, deploy|
     mode "0660"
     group deploy[:group]
     owner deploy[:user]
-    variables(:release_path => current_path, :environment => deploy[:rails_env])
+    variables(
+      :release_path => current_path,
+      :environment => deploy[:rails_env],
+      :application => application
+    )
   end
 
   # after_restart deploy script
@@ -21,6 +25,9 @@ node[:deploy].each do |application, deploy|
     mode "0660"
     group deploy[:group]
     owner deploy[:user]
-    variables(:release_path => current_path, :environment => deploy[:rails_env])
+    variables(
+      :release_path => current_path,
+      :environment => deploy[:rails_env]
+    )
   end
 end
