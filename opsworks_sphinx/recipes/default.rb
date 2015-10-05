@@ -38,12 +38,6 @@ node[:deploy].each do |application, deploy|
       mode 0755
     end
 
-    directory "/var/run/sphinx" do
-      owner deploy[:user]
-      group deploy[:group]
-      mode 0755
-    end
-
     directory "/var/log/sphinxsearch/#{application}" do
       recursive true
       owner deploy[:user]
