@@ -54,8 +54,8 @@ node[:deploy].each do |application, deploy|
       source "thinking_sphinx_searchd"            
     end
     
-    template "/etc/monit/monitrc.d/sphinx.#{application}" do
-      source "sphinx.erb"
+    template "/etc/monit/conf.d/sphinx.#{application}.monitrc" do
+      source "sphinx.monitrc.erb"
       owner deploy[:user]
       group deploy[:group]
       mode 0644
