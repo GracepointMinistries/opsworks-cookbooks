@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: sphinx
-# Recipe:: default
+# Recipe:: reindex
 #
 
 include_recipe "deploy"
