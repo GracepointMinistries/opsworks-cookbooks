@@ -8,8 +8,7 @@ include_recipe "deploy"
 node[:deploy].each do |application, deploy|
   deploy = node[:deploy][application]
   current_path = deploy[:current_path]
-
-  is_sphinx_instance = node[:opsworks][:instance][:layers].include?('sphinx')
+  
   is_rails_app = node[:opsworks][:instance][:layers].include?('rails-app')
 
   # If you want to have scheduled reindexes in cron, enter the minute
@@ -22,9 +21,9 @@ node[:deploy].each do |application, deploy|
   cron_interval = 10 #If this is not set your data will NOT be indexed
 
   # Get the sphinx host from the Sphinx layer 
-  sphinx_host = node[:opsworks][:layers]['sphinx'][:instances].collect{|instance, names| names["private_ip"]}.first rescue nil
+  sphinx_host = '127.0.0.1'
   
-  if is_sphinx_instance
+  if is_rails_app
     Chef::Log.info("configuring thinking_sphinx")
     
     directory "/data/sphinx/#{application}/indexes" do
@@ -66,9 +65,7 @@ node[:deploy].each do |application, deploy|
         user deploy[:user]
       end
     end
-  end
 
-  if is_rails_app
     directory "#{deploy[:deploy_to]}/shared/config/sphinx" do
       recursive true
       owner deploy[:user]
