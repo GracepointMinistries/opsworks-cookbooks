@@ -47,7 +47,7 @@ node[:deploy].each do |application, deploy|
       mode 0755
     end
 
-    cookbook_file "#{shared_apth}/scripts/thinking_sphinx_searchd" do
+    cookbook_file "#{shared_path}/scripts/thinking_sphinx_searchd" do
       owner deploy[:user]
       group deploy[:group]
       mode 0655
