@@ -110,5 +110,16 @@ node[:deploy].each do |application, deploy|
       })
       cwd current_path
     end
+
+    Chef::Log.info("indexing thinking_sphinx")
+    
+    execute "thinking_sphinx index" do
+      command "bundle exec rake ts:index"
+      user deploy[:user]
+      environment({            
+        'RAILS_ENV' => deploy[:rails_env]
+      })
+      cwd current_path
+    end    
   end    
 end
