@@ -1,10 +1,10 @@
-<%= @environment %>:
-  searchd_log_file: /var/log/sphinxsearch/<%= @application %>/searchd.log
-  query_log_file: /var/log/sphinxsearch/<%= @application %>/query.log
+<%= @environment %>:  
+  log: /var/log/sphinxsearch/<%= @application %>/searchd.log
+  query_log: /var/log/sphinxsearch/<%= @application %>/query.log
   pid_file: /var/run/sphinxsearch/searchd.pid
   address: <%= @address %>
-  port: 9312
+  mysql41: 9312
   mem_limit: <%= @mem_limit %>
-  config_file: <%= @release_path %>/config/sphinx/<%= @environment %>.sphinx.conf
-  searchd_file_path: /data/sphinx/<%= @application %>/indexes
+  configuration_file: <%= @release_path %>/config/sphinx/<%= @environment %>.sphinx.conf
+  indices_location: /data/sphinx/<%= @application %>/indexes
 
