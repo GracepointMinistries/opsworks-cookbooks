@@ -8,6 +8,7 @@ include_recipe "deploy"
 node[:deploy].each do |application, deploy|
   deploy = node[:deploy][application]
   current_path = deploy[:current_path]
+  shared_path = "#{deploy[:deploy_to]}/shared"
   
   is_rails_app = node[:opsworks][:instance][:layers].include?('rails-app')
 
@@ -33,11 +34,24 @@ node[:deploy].each do |application, deploy|
       mode 0755
     end
 
+    directory "/var/run/sphinxsearch" do
+      owner deploy[:user]
+      group deploy[:group]
+      mode 0755
+    end
+
     directory "/var/log/sphinxsearch/#{application}" do
       recursive true
       owner deploy[:user]
       group deploy[:group]
       mode 0755
+    end
+
+    cookbook_file "#{shared_apth}/scripts/thinking_sphinx_searchd" do
+      owner deploy[:user]
+      group deploy[:group]
+      mode 0655
+      source "thinking_sphinx_searchd"            
     end
     
     template "/etc/monit/monitrc.d/sphinx.#{application}" do
@@ -66,14 +80,14 @@ node[:deploy].each do |application, deploy|
       end
     end
 
-    directory "#{deploy[:deploy_to]}/shared/config/sphinx" do
+    directory "#{shared_path}/config/sphinx" do
       recursive true
       owner deploy[:user]
       group deploy[:group]
       mode 0755
     end
 
-    template "#{deploy[:deploy_to]}/shared/config/thinking_sphinx.yml" do
+    template "#{shared_path}/config/thinking_sphinx.yml" do
       owner deploy[:user]
       group deploy[:group]
       mode 0644
