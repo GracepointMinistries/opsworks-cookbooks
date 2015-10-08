@@ -110,19 +110,5 @@ node[:deploy].each do |application, deploy|
       })
       cwd current_path
     end
-
-    Chef::Log.info("indexing thinking_sphinx")
-
-    # Check to see if a migration was run during the last deployment. If so, we should validate that the sphinx reindex is working
-    if deploy["migrate"]
-      execute "thinking_sphinx index" do
-        command "bundle exec rake ts:index"
-        user deploy[:user]
-        environment({            
-          'RAILS_ENV' => deploy[:rails_env]
-        })
-        cwd current_path
-      end
-    end          
   end    
 end
