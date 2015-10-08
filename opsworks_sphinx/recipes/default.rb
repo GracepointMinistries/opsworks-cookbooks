@@ -61,7 +61,7 @@ node[:deploy].each do |application, deploy|
         day     '*'
         month   '*'
         weekday '*'
-        command "cd /data/#{application}/current && RAILS_ENV=#{deploy[:rails_env]} bundle exec rake ts:index"
+        command "cd #{current_path} && RAILS_ENV=#{deploy[:rails_env]} bundle exec rake ts:index"
         user deploy[:user]
       end
     end
