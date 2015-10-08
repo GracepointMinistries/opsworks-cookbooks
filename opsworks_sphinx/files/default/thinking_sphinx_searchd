@@ -2,7 +2,7 @@
 # This script starts and stops the searchd
 # This script belongs in /www/srv/<appname>/scripts/
 ###############################################################################
-export PATH=/usr/local/bin:/usr/bin:/bin:/opt/bin:$(gcc-config -B)
+export PATH=/usr/local/bin:/usr/bin:/bin
 ###############################################################################
 
 usage() {
@@ -23,7 +23,7 @@ LOGBASE=/var/log/sphinxsearch/$1
 PIDFILE=/var/run/sphinxsearch/searchd.pid
 CONFIGFILE=/srv/www/$1/shared/config/thinking_sphinx.yml
 GEMFILE=/srv/www/$1/current/Gemfile
-OUTPUT=$LOGBASE/$1/searchd.log
+OUTPUT=$LOGBASE/searchd.log
 USER=`stat -c"%U" /srv/www/$1/current`
 COMMAND=""
 ###############################################################################
