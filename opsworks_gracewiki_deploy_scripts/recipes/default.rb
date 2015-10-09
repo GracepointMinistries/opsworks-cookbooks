@@ -30,9 +30,10 @@ node[:deploy].each do |application, deploy|
   end
  
   # after_restart deploy script
-    cookbook_file "#{shared_path}/deploy/after_restart.rb" do
+  cookbook_file "#{shared_path}/deploy/after_restart.rb" do
     owner deploy[:user]
     group deploy[:group]
     mode 0660
     source "after_restart.rb"            
   end
+end
