@@ -14,10 +14,10 @@ node[:deploy].each do |application, deploy|
 
   # Check to see if a migration was run during the last deployment. If so, we should validate that the sphinx reindex is working  
   if is_rails_app && deploy["migrate"]
-    Chef::Log.info("indexing thinking_sphinx")
+    Chef::Log.info("rebuilding thinking_sphinx")
     
     execute "thinking_sphinx index" do
-      command "bundle exec rake ts:index"
+      command "bundle exec rake ts:rebuild"
       user deploy[:user]
       environment({            
         'RAILS_ENV' => deploy[:rails_env]
