@@ -10,6 +10,8 @@ node[:deploy].each do |application, deploy|
   # create shared directory for assets, if it doesn't exist
   directory "#{shared_path}/assets" do
     mode 0770
+    owner deploy[:user]
+    group deploy[:group]
     action :create
     recursive true
   end
@@ -17,6 +19,8 @@ node[:deploy].each do |application, deploy|
   # create deploy directory for assets, if it doesn't exist
   directory "#{shared_path}/deploy" do
     mode 0770
+    owner deploy[:user]
+    group deploy[:group]
     action :create
     recursive true
   end
