@@ -14,14 +14,6 @@ node[:deploy].each do |application, deploy|
     recursive true
   end
 
-  # before_symlink
-  cookbook_file "#{current_path}/deploy/before_symlink.rb" do
-    owner deploy[:user]
-    group deploy[:group]
-    mode 0655
-    source "before_symlink.rb"            
-  end
-
   # before_restart deploy script
   template "#{current_path}/deploy/before_restart.rb" do
     source "before_restart.rb.erb"  
