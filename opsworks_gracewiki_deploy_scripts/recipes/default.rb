@@ -14,28 +14,25 @@ node[:deploy].each do |application, deploy|
     recursive true
   end
 
-  # before_restart deploy script
-  template "#{current_path}/deploy/before_restart.rb" do
-    source "before_restart.rb.erb"  
-    mode "0660"
-    group deploy[:group]
-    owner deploy[:user]
-    variables(
-      :release_path => current_path,
-      :environment => deploy[:rails_env],
-      :application => application
-    )
+  # create deploy directory for assets, if it doesn't exist
+  directory "#{shared_path}/deploy" do
+    mode 0770
+    action :create
+    recursive true
   end
 
-  # after_restart deploy script
-  template "#{current_path}/deploy/after_restart.rb" do
-    source "after_restart.rb.erb"  
-    mode "0660"
-    group deploy[:group]
+  # before_restart deploy script
+  cookbook_file "#{shared_path}/deploy/before_restart.rb" do
     owner deploy[:user]
-    variables(
-      :release_path => current_path,
-      :environment => deploy[:rails_env]
-    )
+    group deploy[:group]
+    mode 0660
+    source "before_restart.rb"            
   end
-end
+ 
+  # after_restart deploy script
+    cookbook_file "#{shared_path}/deploy/after_restart.rb" do
+    owner deploy[:user]
+    group deploy[:group]
+    mode 0660
+    source "after_restart.rb"            
+  end
