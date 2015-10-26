@@ -38,7 +38,7 @@ end
 default[:nginx][:log_format] = {}
 
 # increase if you accept large uploads
-default[:nginx][:client_max_body_size] = "4m"
+default[:nginx][:client_max_body_size] = "4999m"
 
 default[:nginx][:gzip] = "on"
 default[:nginx][:gzip_static] = "on"
