@@ -61,7 +61,7 @@ node[:deploy].each do |application, deploy|
       mode 0644
       variables({
         :application => application,
-        :user => 'root'
+        :user => 'deploy'
       })
     end
 
