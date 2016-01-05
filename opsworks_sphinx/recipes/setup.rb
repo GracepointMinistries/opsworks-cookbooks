@@ -50,7 +50,7 @@ node[:deploy].each do |application, deploy|
     cookbook_file "#{shared_path}/scripts/thinking_sphinx_searchd" do
       owner deploy[:user]
       group deploy[:group]
-      mode 0655
+      mode 0755
       source "thinking_sphinx_searchd"            
     end
     
@@ -61,7 +61,7 @@ node[:deploy].each do |application, deploy|
       mode 0644
       variables({
         :application => application,
-        :user => 'deploy'
+        :user => 'depl'
       })
     end
 
