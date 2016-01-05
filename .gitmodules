@@ -1,3 +1,0 @@
-[submodule "opsworks-cookbooks"]
-	path = opsworks-cookbooks
-	url = git@github.com:GracepointMinistries/opsworks-cookbooks.git
