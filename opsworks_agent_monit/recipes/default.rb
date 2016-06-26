@@ -15,7 +15,7 @@ include_recipe "opsworks_agent_monit::reload_systemd"
 
 if platform?('debian','ubuntu')
   template "/etc/default/monit" do
-    source "monit.erb"
+    source "ubuntu-12.04/monit.erb"
     mode 0644
   end
 end
