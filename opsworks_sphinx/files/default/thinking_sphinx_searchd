@@ -1,0 +1,72 @@
+#!/bin/sh
+# This script starts and stops the searchd
+# This script belongs in /www/srv/<appname>/scripts/
+###############################################################################
+export PATH=/usr/local/bin:/usr/bin:/bin
+###############################################################################
+
+usage() {
+  echo "Usage: $0 <appname> {start, stop, configure, reindex} [environment]"
+  exit 1
+}
+
+if [ $# -lt 2 ]; then usage; fi
+
+if [ -z "$3" ]; then
+  FRAMEWORK_ENV=production
+else
+  FRAMEWORK_ENV="$3"
+fi
+
+###############################################################################
+LOGBASE=/var/log/sphinxsearch/$1
+PIDFILE=/var/run/sphinxsearch/searchd.pid
+CONFIGFILE=/srv/www/$1/shared/config/thinking_sphinx.yml
+GEMFILE=/srv/www/$1/current/Gemfile
+OUTPUT=$LOGBASE/searchd.log
+USER=`stat -c"%U" /srv/www/$1/current`
+COMMAND=""
+###############################################################################
+
+export RAILS_ENV="$FRAMEWORK_ENV"
+export RACK_ENV="$FRAMEWORK_ENV"
+export HOME="/home/$USER"
+
+if [ -f $GEMFILE ]; then
+  COMMAND="bundle exec"
+fi
+
+if [ -d /srv/www/$1/current ]; then
+
+  cd /srv/www/$1/current
+
+  if [ ! -f $CONFIGFILE ]; then
+          echo "$CONFIGFILE doesn't exist! Exiting" >> $OUTPUT 2>&1
+  fi
+
+  # handle the second param, don't start if already existing
+  case "$2" in
+    start)
+      echo "Starting searchd"
+      $COMMAND rake ts:start >> $OUTPUT 2>&1
+      ;;
+    stop)
+      echo "Stopping searchd"
+      $COMMAND rake ts:stop >> $OUTPUT 2>&1
+      ;;
+    configure)
+      echo "Configuring your searchd indexes"
+      $COMMAND rake ts:configure >> $OUTPUT 2>&1
+      ;;
+    reindex)
+      echo "Reindexing your searchd indexes against the live server"
+      $COMMAND rake ts:index >> $OUTPUT 2>&1
+      ;;
+    *)
+      usage
+      ;;
+      esac
+else
+  echo "/srv/www/$1/current doesn't exist."
+  usage
+fi
