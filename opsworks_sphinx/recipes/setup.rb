@@ -103,7 +103,7 @@ node[:deploy].each do |application, deploy|
     end
 
     execute "sphinx config" do
-      command "bundle exec rake ts:configure"
+      command "bundle exec rake ts:config"
       user deploy[:user]
       environment({          
         'RAILS_ENV' => deploy[:rails_env]
