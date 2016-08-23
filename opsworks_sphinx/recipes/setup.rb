@@ -68,14 +68,14 @@ node[:deploy].each do |application, deploy|
     execute "monit reload"
 
     if cron_interval
-      cron "sphinx index" do
+      cron "sphinx rebuild" do
         action  :create
         minute  "*/#{cron_interval}"
         hour    '*'
         day     '*'
         month   '*'
         weekday '*'
-        command "cd #{current_path} && RAILS_ENV=#{deploy[:rails_env]} bundle exec rake ts:index"
+        command "cd #{current_path} && RAILS_ENV=#{deploy[:rails_env]} bundle exec rake ts:rebuild"
         user deploy[:user]
       end
     end
