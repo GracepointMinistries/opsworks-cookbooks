@@ -9,7 +9,7 @@ node[:deploy].each do |application, deploy|
   deploy = node[:deploy][application]
   current_path = deploy[:current_path]
   shared_path = "#{deploy[:deploy_to]}/shared"
-  
+
   is_rails_app = node[:opsworks][:instance][:layers].include?('rails-app')
 
   # If you want to have scheduled reindexes in cron, enter the minute
@@ -21,12 +21,12 @@ node[:deploy].each do |application, deploy|
 
   cron_interval = 10 #If this is not set your data will NOT be indexed
 
-  # Get the sphinx host from the Sphinx layer 
+  # Get the sphinx host from the Sphinx layer
   sphinx_host = '127.0.0.1'
-  
+
   if is_rails_app
     Chef::Log.info("configuring thinking_sphinx")
-    
+
     directory "/data/sphinx/#{application}/indexes" do
       recursive true
       owner deploy[:user]
@@ -51,9 +51,9 @@ node[:deploy].each do |application, deploy|
       owner deploy[:user]
       group deploy[:group]
       mode 0755
-      source "thinking_sphinx_searchd"            
+      source "thinking_sphinx_searchd"
     end
-    
+
     template "/etc/monit/conf.d/sphinx.#{application}.monitrc" do
       source "sphinx.monitrc.erb"
       owner deploy[:user]
@@ -75,7 +75,7 @@ node[:deploy].each do |application, deploy|
         day     '*'
         month   '*'
         weekday '*'
-        command "cd #{current_path} && RAILS_ENV=#{deploy[:rails_env]} bundle exec rake ts:rebuild"
+        command "cd #{current_path}; RAILS_ENV=#{deploy[:rails_env]} /usr/local/bin/rake ts:rebuild >> #{current_path}/log/ts_rebuild.log 2>&1"
         user deploy[:user]
       end
     end
@@ -105,21 +105,21 @@ node[:deploy].each do |application, deploy|
     execute "sphinx config" do
       command "bundle exec rake ts:config"
       user deploy[:user]
-      environment({          
+      environment({
         'RAILS_ENV' => deploy[:rails_env]
       })
       cwd current_path
     end
 
     Chef::Log.info("indexing thinking_sphinx")
-    
+
     execute "thinking_sphinx index" do
       command "bundle exec rake ts:index"
       user deploy[:user]
-      environment({            
+      environment({
         'RAILS_ENV' => deploy[:rails_env]
       })
       cwd current_path
-    end    
-  end    
+    end
+  end
 end
